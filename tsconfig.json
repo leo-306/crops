@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "importHelpers": true,
+    "target": "es5",
+    "jsx": "react",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "lib": [
+      "dom",
+      "es6",
+      "dom.iterable",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": false,
+    "checkJs": false,
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": true,
+    "paths": {
+      "@": ["src"],
+      "@/*": ["src/*"],
+    },
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

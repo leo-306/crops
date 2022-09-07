@@ -1,0 +1,52 @@
+.areaContainer {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.3);
+
+  &:before {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    //background: linear-gradient(90deg, transparent 50%, #fff 50%) repeat-x, linear-gradient(90deg, transparent 50%, #fff 50%) repeat-x, linear-gradient(0deg, transparent 50%, #fff 50%) repeat-y, linear-gradient(0deg, transparent 50%, #fff 50%) repeat-y;
+    //background-size: 8px 1px, 8px 1px, 1px 8px, 1px 8px;
+    //background-position: 0 0, 0 100%, 0 0, 100% 0;
+    border: 1px dashed #FFFFFF;
+  }
+
+  .cursor {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 0 0 2px 0;
+    font: 500 12px/16px 'PingFang SC';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+  }
+
+  .delete {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 0 0 0 2px;
+    cursor: pointer;
+  }
+
+  &:hover {
+    .delete {
+      display: flex;
+    }
+  }
+}
