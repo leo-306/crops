@@ -8,7 +8,7 @@ module.exports = {
   output: {
     globalObject: 'this',
     // 打包文件根目录
-    path: path.resolve(__dirname, '../dist/lib'),
+    path: path.resolve(__dirname, '../dist'),
     filename: `index.js`,
     library: {
       type: 'umd',

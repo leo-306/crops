@@ -1,7 +1,9 @@
 {
   "name": "@mixin/corps",
-  "version": "1.0.0",
+  "version": "0.0.1",
+  "description": "clipping tool of hot zone",
   "main": "dist/index.js",
+  "author": "leo306",
   "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
@@ -10,8 +12,16 @@
     "build": "webpack --config ./scripts/webpack.prod.js && tsc && tsc-alias",
     "prepublishOnly": "npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xxx/shang-utils"
+  },
   "keywords": [
-    "corps"
+    "react",
+    "corps",
+    "hot area",
+    "hot zone",
+    "clip"
   ],
   "files": [
     "dist",
@@ -22,7 +32,8 @@
     "lodash": "^4.17.21",
     "nanoid": "^4.0.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "interactjs": "^1.10.17"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
@@ -54,8 +65,5 @@
     "webpack-dev-server": "^4.9.3",
     "webpack-merge": "^5.8.0",
     "webpackbar": "^5.0.2"
-  },
-  "dependencies": {
-    "interactjs": "^1.10.17"
   }
 }
