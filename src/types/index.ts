@@ -3,13 +3,19 @@ import { CSSProperties } from 'react';
 export interface CorpSketchProps {
   coordinates: Coordinate[];
   src: string;
+  width: number | string;
+  height?: number | string;
+  className?: string;
   coordinateConfig?: CoordinateConfig;
-  sketchStyle?: CSSProperties;
+  locationLine?: boolean;
   onChange?(coordinate: Coordinate, index: number, coordinates: Coordinate[]): void;
   onAdd?(coordinate: Coordinate, index: number): void;
   onDelete?(coordinate: Coordinate, index: number): void;
   onMount?(): void;
-  getCropData?(coordinates: Coordinate[]): CorpData[];
+}
+
+export interface CorpSketchRef {
+  getCropData(coordinates: Coordinate[]): CorpData[];
 }
 
 export interface Coordinate {
@@ -32,10 +38,27 @@ export type CorpData = Coordinate & { img: string };
 export type Point = { x: number; y: number };
 
 export interface HotAreaProps {
+  showLocationLine: boolean;
   coordinate: Coordinate;
   index: number;
   onChange(coordinate: Coordinate): void;
   onDelete(coordinate: Coordinate): void;
+  setLocationInfo(info: LocationLineInfo | null): void;
 }
 
 export type AnyType = any;
+
+export type LocationLineInfo = {
+  style: {
+    leftTopVertical: CSSProperties;
+    leftTopHorizontal: CSSProperties;
+    rightBottomVertical: CSSProperties;
+    rightBottomHorizontal: CSSProperties;
+  };
+  offset: {
+    leftTopVertical: number;
+    leftTopHorizontal: number;
+    rightBottomVertical: number;
+    rightBottomHorizontal: number;
+  }
+};

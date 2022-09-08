@@ -1,0 +1,56 @@
+.leftTopVerticalLine,
+.rightBottomVerticalLine {
+  position: absolute;
+  border-left: 1px dashed #326BFB;
+  width: 1px;
+  box-sizing: border-box;
+  z-index: 1001;
+}
+
+.leftTopHorizontalLine,
+.rightBottomHorizontalLine {
+  position: absolute;
+  height: 1px;
+  border-top: 1px dashed #326BFB;
+  box-sizing: border-box;
+  z-index: 1001;
+}
+
+.leftTopVerticalLine,
+.rightBottomVerticalLine,
+.leftTopHorizontalLine,
+.rightBottomHorizontalLine {
+  &:before {
+    position: absolute;
+    content: attr(data-offset);
+    padding: 2px;
+    font: 12px/14px "PingFang SC";
+    color: #FFFFFF;
+    background: #326BFB;
+    border-radius: 2px;
+  }
+}
+
+.leftTopVerticalLine:before {
+  top: 50%;
+  left: 3px;
+  transform: translateY(-50%);
+}
+
+.leftTopHorizontalLine:before {
+  left: 50%;
+  top: 3px;
+  transform: translateX(-50%);
+}
+
+.rightBottomVerticalLine:before {
+  top: 50%;
+  right: 3px;
+  transform: translateY(-50%);
+}
+
+.rightBottomHorizontalLine:before {
+  left: 50%;
+  bottom: 3px;
+  transform: translateX(-50%);
+}

@@ -1,31 +1,48 @@
-import React, { FC, MouseEventHandler, useCallback, useEffect, useRef, useState, MouseEvent } from 'react';
-import { clamp, throttle } from 'lodash';
-import { Coordinate, CorpSketchProps, Point } from '@/types';
-import { generateID, getCursorPointer } from '@/utils';
+import React, {
+	forwardRef,
+	ForwardRefRenderFunction,
+	MouseEvent,
+	MouseEventHandler,
+	useCallback,
+	useEffect,
+	useImperativeHandle,
+	useMemo,
+	useRef,
+	useState
+} from 'react';
+import { clamp, isNumber, throttle } from 'lodash';
+import { Coordinate, CorpData, CorpSketchProps, CorpSketchRef, LocationLineInfo, Point } from '@/types';
+import { createCanvas, generateID, getCursorPointer } from '@/utils';
 import { BASE_COORDINATE_CONFIG } from '@/constants';
 import HotArea from './components/hot-area';
+import LocationLine from './components/location-line';
 
 import styles from './index.less';
 
-const MultipleCorpSketch: FC<CorpSketchProps> = props => {
+const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProps> = (props, ref) => {
 	const {
 		coordinates,
 		coordinateConfig = BASE_COORDINATE_CONFIG,
 		onChange,
-		sketchStyle,
 		src,
+		width,
+		height,
+		className = '',
 		onAdd,
 		onDelete,
-		getCropData,
+		locationLine: showLocationLine = true,
 		onMount
 	} = props;
 
+	const [locationLineInfo, setLocationLineInfo] = useState<LocationLineInfo | null>(null);
 	const startPoint = useRef<Point | null>(null);
 	const currentIndex = useRef(0);
 	const currentId = useRef('');
 	const moved = useRef(false);
 	const [currentCoordinate, setCurrentCoordinate] = useState<Coordinate | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
+	const imageRef = useRef<HTMLImageElement>(null);
+	const sketchStyle = useMemo(() => ({ width, height: height ?? 'auto' }), [width, height]);
 
 	const getCoordinatePosition = useCallback((event: MouseEvent) => {
 		const rect = containerRef.current.getBoundingClientRect();
@@ -59,6 +76,7 @@ const MultipleCorpSketch: FC<CorpSketchProps> = props => {
 		currentId.current = '';
 		setCurrentCoordinate(null);
 		moved.current = false;
+		setLocationLineInfo(null);
 	}, []);
 
 	const onMouseDown: MouseEventHandler = useCallback(event => {
@@ -70,9 +88,43 @@ const MultipleCorpSketch: FC<CorpSketchProps> = props => {
 	const onMouseMove: MouseEventHandler = useCallback(throttle(event => {
 		if (startPoint.current) {
 			moved.current = true;
-			setCurrentCoordinate(getCoordinatePosition(event));
+			const coordinate = getCoordinatePosition(event);
+			const rect = containerRef.current.getBoundingClientRect();
+
+			setCurrentCoordinate(coordinate);
+
+			showLocationLine && setLocationLineInfo({
+				offset: {
+					leftTopHorizontal: coordinate.x,
+					leftTopVertical: coordinate.y,
+					rightBottomHorizontal: rect.width - coordinate.width - coordinate.x,
+					rightBottomVertical: rect.height - coordinate.height - coordinate.y,
+				},
+				style: {
+					leftTopHorizontal: {
+						left: 0,
+						top: coordinate.y + 'px',
+						width: coordinate.x + 'px',
+					},
+					leftTopVertical: {
+						left: coordinate.x + 'px',
+						top: 0,
+						height: coordinate.y + 'px',
+					},
+					rightBottomHorizontal: {
+						left: (coordinate.x + coordinate.width) + 'px',
+						top: (coordinate.y + coordinate.height) + 'px',
+						width: (rect.width - coordinate.width - coordinate.x) + 'px',
+					},
+					rightBottomVertical: {
+						left: (coordinate.x + coordinate.width) + 'px',
+						top: (coordinate.y + coordinate.height) + 'px',
+						height: (rect.height - coordinate.height - coordinate.y) + 'px',
+					},
+				},
+			});
 		}
-	}, 100, { leading: true } ), [getCoordinatePosition]);
+	}, 100, { leading: true } ), [showLocationLine, getCoordinatePosition]);
 
 	const onMouseUp = useCallback(() => {
 		if (moved.current) {
@@ -95,6 +147,7 @@ const MultipleCorpSketch: FC<CorpSketchProps> = props => {
 		}
 	}, [onAdd, onChange, coordinates, getCoordinatePosition]);
 
+	/** 热区变更 */
 	const hotAreaChange = useCallback((coordinate: Coordinate) => {
 		const index = coordinates.findIndex(c => c.id === coordinate.id);
 
@@ -103,6 +156,7 @@ const MultipleCorpSketch: FC<CorpSketchProps> = props => {
 		}
 	}, [coordinates, onChange]);
 
+	/** 删除热区 */
 	const hotAreaDelete = useCallback((coordinate: Coordinate) => {
 		const index = coordinates.findIndex(c => c.id === coordinate.id);
 
@@ -117,9 +171,39 @@ const MultipleCorpSketch: FC<CorpSketchProps> = props => {
 		onMount?.();
 	}, []);
 
+	useImperativeHandle(ref, () => ({
+		getCropData(coordinates: Coordinate[]): CorpData[] {
+			if (!src) {
+				return coordinates as CorpData[];
+			}
+
+			const rect = containerRef.current.getBoundingClientRect();
+			const originWidth = isNumber(width) ? width : rect.width;
+			const originHeight = isNumber(height) ? height : rect.height;
+			const [, ctx] = createCanvas({ width: isNumber(width) ? width : rect.width, height: isNumber(height) ? height : rect.height });
+			ctx.drawImage(imageRef.current, 0, 0, originWidth, originHeight);
+
+			return coordinates.map(coordinate => {
+				const [imgCanvas, imgCtx] = createCanvas({ width: coordinate.width, height: coordinate.height });
+				imgCtx.putImageData(
+					ctx.getImageData(
+						coordinate.x * window.devicePixelRatio,
+						coordinate.y * window.devicePixelRatio,
+						coordinate.width * window.devicePixelRatio,
+						coordinate.height * window.devicePixelRatio
+					),
+					0,
+					0
+				);
+
+				return { ...coordinate, img: imgCanvas.toDataURL() };
+			});
+		},
+	}), [src, width]);
+
 	return (
 		<div
-			className={styles.cropContainer}
+			className={`${styles.cropContainer} ${className}`}
 			style={sketchStyle}
 			ref={containerRef}
 			onMouseDown={onMouseDown}
@@ -127,15 +211,18 @@ const MultipleCorpSketch: FC<CorpSketchProps> = props => {
 			onMouseUp={onMouseUp}
 			onMouseLeave={onMouseLeave}
 		>
-			<img className={styles.img} src={src} alt="" draggable={false} />
+			<img ref={imageRef} className={styles.img} src={src} alt="" draggable={false} crossOrigin="anonymous" />
+			{(showLocationLine && locationLineInfo) ? <LocationLine info={locationLineInfo} /> : null}
 			{[...coordinates, currentCoordinate].filter(Boolean).map((coordinate, index) => {
 				return (
 					<HotArea
 						coordinate={coordinate}
 						key={coordinate.id}
 						index={index}
+						showLocationLine={showLocationLine}
 						onChange={hotAreaChange}
 						onDelete={hotAreaDelete}
+						setLocationInfo={setLocationLineInfo}
 					/>
 				);
 			})}
@@ -143,4 +230,4 @@ const MultipleCorpSketch: FC<CorpSketchProps> = props => {
 	);
 };
 
-export default MultipleCorpSketch;
+export default forwardRef<CorpSketchRef, CorpSketchProps>(MultipleCorpSketch);

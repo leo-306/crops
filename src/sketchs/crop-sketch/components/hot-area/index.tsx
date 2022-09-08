@@ -5,11 +5,13 @@ import { useDragWithAbsolute } from '@/hooks';
 import styles from './index.less';
 
 const HotArea: FC<HotAreaProps> = props => {
-	const { coordinate, index, onChange, onDelete } = props;
+	const { coordinate, index, onChange, onDelete, setLocationInfo, showLocationLine } = props;
 	const [dragWithAbsolute] = useDragWithAbsolute({
+		showLocationLine,
 		onChange: position => {
 			onChange({ ...coordinate, ...position });
-		}
+		},
+		setLocationInfo,
 	});
 
 	const style = useMemo(() => {
