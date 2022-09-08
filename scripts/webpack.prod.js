@@ -22,7 +22,8 @@ module.exports = merge(common, {
       "react-dom": "react-dom",
       "classnames": "classnames",
       "nanoid": "nanoid",
-      "dayjs": "dayjs"
+      "dayjs": "dayjs",
+      "interactjs": "interactjs"
     },
   ],
   plugins: [
