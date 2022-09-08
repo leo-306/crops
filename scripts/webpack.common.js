@@ -50,8 +50,9 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
+              sourceMap: false,
               modules: {
-                localIdentName: '[local]_[hash:base64:5]',
+                localIdentName: 'mixin-[local]',
               },
             },
           },
@@ -75,7 +76,6 @@ module.exports = {
               }
             }
           }
-          // 'less-loader',
         ],
       },
       {
