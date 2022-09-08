@@ -1,5 +1,5 @@
 {
-  "name": "react-mixin-corps",
+  "name": "react-mixin-crops",
   "version": "0.0.1",
   "description": "clipping tool of hot zone",
   "author": "leo306",
@@ -19,7 +19,7 @@
   },
   "keywords": [
     "react",
-    "corps",
+    "crops",
     "hot area",
     "hot zone",
     "clip"
