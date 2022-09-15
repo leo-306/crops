@@ -36,6 +36,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 	} = props;
 
 	const [locationLineInfo, setLocationLineInfo] = useState<LocationLineInfo | null>(null);
+	const [selectedId, setSelectedId] = useState('');
 	const startPoint = useRef<Point | null>(null);
 	const currentIndex = useRef(0);
 	const currentId = useRef('');
@@ -95,6 +96,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 			const coordinate = getCoordinatePosition(event);
 			const rect = containerRef.current.getBoundingClientRect();
 
+			setSelectedId(currentId.current);
 			setCurrentCoordinate(coordinate);
 
 			showLocationLine && setLocationLineInfo({
@@ -220,12 +222,14 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 			{[...coordinates, currentCoordinate].filter(Boolean).map((coordinate, index) => {
 				return (
 					<HotArea
+						selected={coordinate.id === selectedId}
 						coordinate={coordinate}
 						key={coordinate.id}
 						index={index}
 						showLocationLine={showLocationLine}
 						onChange={hotAreaChange}
 						onDelete={hotAreaDelete}
+						setSelectedId={setSelectedId}
 						setLocationInfo={setLocationLineInfo}
 					/>
 				);

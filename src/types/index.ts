@@ -42,11 +42,13 @@ export type Point = { x: number; y: number };
 
 export interface HotAreaProps {
   showLocationLine: boolean;
+  selected: boolean;
   coordinate: Coordinate;
   index: number;
   onChange(coordinate: Coordinate): void;
   onDelete(coordinate: Coordinate): void;
   setLocationInfo(info: LocationLineInfo | null): void;
+  setSelectedId(id: string): void;
 }
 
 export type AnyType = any;

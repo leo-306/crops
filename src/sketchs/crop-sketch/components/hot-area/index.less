@@ -44,9 +44,66 @@
     cursor: pointer;
   }
 
+  &.selected,
   &:hover {
     .delete {
       display: flex;
     }
+
+    .resizeArea {
+      display: block;
+    }
+  }
+
+  .resizeArea {
+    position: absolute;
+    display: none;
+    width: 3px;
+    height: 3px;
+    background: #FFFFFF;
+  }
+
+  .leftTopArea {
+    left: -1px;
+    top: -1px;
+  }
+
+  .topCenterArea {
+    left: 50%;
+    transform: translateX(-50%);
+    top: -1px;
+  }
+
+  .rightTopArea {
+    right: -1px;
+    top: -1px;
+  }
+
+  .rightCenterArea {
+    top: 50%;
+    transform: translateY(-50%);
+    right: -1px;
+  }
+
+  .rightBottomArea {
+    right: -1px;
+    bottom: -1px;
+  }
+
+  .bottomCenterArea {
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .leftBottomArea {
+    left: -1px;
+    bottom: -1px;
+  }
+
+  .leftCenterArea {
+    left: -1px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
