@@ -1,5 +1,5 @@
-import { AnyType } from '@/types';
 import { MouseEvent } from 'react';
+import { AnyType } from '@/types';
 
 /** 查找绝对定位元素的相对父元素 */
 export const getAbsoluteParent = (target: HTMLElement) => {
@@ -37,4 +37,23 @@ export const createCanvas = (options: { width: number; height: number }): [HTMLC
 	ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
 	return [canvas, ctx];
+};
+
+/** 获取图片的原始宽高 */
+export const getImageObject = (src: string): Promise<HTMLImageElement | null> => {
+	if (!src) {
+		return Promise.resolve(null);
+	}
+
+	return new Promise(resolve => {
+		const img = new Image();
+		img.crossOrigin = 'anonymous';
+		img.onload = () => {
+			return resolve(img);
+		};
+		img.onerror = () => {
+			return resolve(null);
+		};
+		img.src = src;
+	});
 };

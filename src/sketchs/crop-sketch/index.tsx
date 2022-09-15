@@ -26,7 +26,8 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 		onChange,
 		src,
 		width,
-		height,
+		limit = Number.MAX_VALUE,
+		height = 'auto',
 		className = '',
 		onAdd,
 		onDelete,
@@ -42,7 +43,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 	const [currentCoordinate, setCurrentCoordinate] = useState<Coordinate | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const imageRef = useRef<HTMLImageElement>(null);
-	const sketchStyle = useMemo(() => ({ width, height: height ?? 'auto' }), [width, height]);
+	const sketchStyle = useMemo(() => ({ width, height }), [width, height]);
 
 	const getCoordinatePosition = useCallback((event: MouseEvent) => {
 		const rect = containerRef.current.getBoundingClientRect();
@@ -80,10 +81,13 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 	}, []);
 
 	const onMouseDown: MouseEventHandler = useCallback(event => {
+		if (coordinates.length >= limit) {
+			return;
+		}
 		startPoint.current = getCursorPointer(event);
 		currentIndex.current = coordinates.length;
 		currentId.current = generateID();
-	}, [coordinates, getCoordinatePosition]);
+	}, [coordinates, getCoordinatePosition, limit]);
 
 	const onMouseMove: MouseEventHandler = useCallback(throttle(event => {
 		if (startPoint.current) {
@@ -199,7 +203,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 				return { ...coordinate, img: imgCanvas.toDataURL() };
 			});
 		},
-	}), [src, width]);
+	}), [src, width, height]);
 
 	return (
 		<div

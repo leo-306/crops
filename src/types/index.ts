@@ -6,6 +6,7 @@ export interface CorpSketchProps {
   width: number | string;
   height?: number | string;
   className?: string;
+  limit?: number;
   coordinateConfig?: CoordinateConfig;
   locationLine?: boolean;
   onChange?(coordinate: Coordinate, index: number, coordinates: Coordinate[]): void;
@@ -13,6 +14,8 @@ export interface CorpSketchProps {
   onDelete?(coordinate: Coordinate, index: number): void;
   onMount?(): void;
 }
+
+export type CorpCanvasSketchProps = Omit<CorpSketchProps, 'width' | 'height'> & { width: number; height?: number };
 
 export interface CorpSketchRef {
   getCropData(coordinates: Coordinate[]): CorpData[];
