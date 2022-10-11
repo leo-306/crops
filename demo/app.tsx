@@ -15,6 +15,7 @@ const App: FC = () => {
 		}
 	]);
 	const ref = useRef({ getCropData: identity });
+	const canvasRef = useRef({ getCropData: identity });
 
 	const getCorpData = () => {
 		const cropData = ref.current.getCropData(coordinates);
@@ -28,6 +29,7 @@ const App: FC = () => {
 					coordinates={coordinates}
 					width={300}
 					limit={2}
+					rotatable
 					src="https://img.zcool.cn/community/016dbe57b021070000012e7eedcf18.jpg@2o.jpg"
 					onChange={(_, _index, coordinates) => {
 						setCoordinates(coordinates);
@@ -49,15 +51,15 @@ const App: FC = () => {
 				</div>
 			</div>
 			<div style={{ flex: 1 }}>
-				<CorpCanvasSketch
-					coordinates={coordinates}
-					width={300}
-					src="https://img.zcool.cn/community/016dbe57b021070000012e7eedcf18.jpg@2o.jpg"
-					onChange={(_, _index, coordinates) => {
-						setCoordinates(coordinates);
-					}}
-					ref={ref}
-				/>
+				{/*<CorpCanvasSketch*/}
+				{/*	coordinates={coordinates}*/}
+				{/*	width={300}*/}
+				{/*	src="https://img.zcool.cn/community/016dbe57b021070000012e7eedcf18.jpg@2o.jpg"*/}
+				{/*	onChange={(_, _index, coordinates) => {*/}
+				{/*		setCoordinates(coordinates);*/}
+				{/*	}}*/}
+				{/*	ref={canvasRef}*/}
+				{/*/>*/}
 			</div>
 		</div>
 	);

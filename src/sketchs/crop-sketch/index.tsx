@@ -29,6 +29,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 		limit = Number.MAX_VALUE,
 		height = 'auto',
 		className = '',
+		rotatable,
 		onAdd,
 		onDelete,
 		locationLine: showLocationLine = true,
@@ -216,12 +217,14 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 			onMouseMove={onMouseMove}
 			onMouseUp={onMouseUp}
 			onMouseLeave={onMouseLeave}
+			onClick={() => setSelectedId('')}
 		>
 			<img ref={imageRef} className={styles.img} src={src} alt="" draggable={false} crossOrigin="anonymous" />
 			{(showLocationLine && locationLineInfo) ? <LocationLine info={locationLineInfo} /> : null}
 			{[...coordinates, currentCoordinate].filter(Boolean).map((coordinate, index) => {
 				return (
 					<HotArea
+						rotatable={rotatable}
 						selected={coordinate.id === selectedId}
 						coordinate={coordinate}
 						key={coordinate.id}

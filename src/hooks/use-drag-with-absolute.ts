@@ -7,7 +7,12 @@ import { Coordinate, LocationLineInfo } from '@/types';
 import { useStaticCallback } from '@/hooks/use-static-callback';
 
 type Props = {
+	/** 是否显示辅助线 */
 	showLocationLine: boolean;
+	/** 是否允许旋转 */
+	rotatable: boolean;
+	/** 是否被选中 */
+	selected: boolean;
 	onChange(position: Omit<Coordinate, 'id'>): void;
 	setLocationInfo(info: LocationLineInfo): void;
 };
@@ -41,6 +46,8 @@ export const useDragWithAbsolute = (props: Props) => {
 	const dragParams = useMemo(() => {
 		return {
 			parentNode: parentRef.current,
+			rotatable: props.rotatable,
+			selected: props.selected,
 			moveStart: onStart,
 			moveEnd: onEnd,
 			onChange: throttle(value => {
@@ -92,7 +99,7 @@ export const useDragWithAbsolute = (props: Props) => {
 			resizeStart: onStart,
 			resizeEnd: onEnd,
 		};
-	}, [props.showLocationLine]);
+	}, [props.showLocationLine, props.rotatable, props.selected]);
 
 	const [, drag] = useDragDom(dragParams, [dragParams]);
 

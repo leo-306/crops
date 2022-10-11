@@ -9,6 +9,7 @@ export interface CorpSketchProps {
   limit?: number;
   coordinateConfig?: CoordinateConfig;
   locationLine?: boolean;
+  rotatable?: boolean;
   onChange?(coordinate: Coordinate, index: number, coordinates: Coordinate[]): void;
   onAdd?(coordinate: Coordinate, index: number): void;
   onDelete?(coordinate: Coordinate, index: number): void;
@@ -43,6 +44,7 @@ export type Point = { x: number; y: number };
 export interface HotAreaProps {
   showLocationLine: boolean;
   selected: boolean;
+  rotatable?: boolean;
   coordinate: Coordinate;
   index: number;
   onChange(coordinate: Coordinate): void;
