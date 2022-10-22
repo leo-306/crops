@@ -27,6 +27,7 @@ export interface Coordinate {
   y: number;
   width: number;
   height: number;
+  rotate?: number;
   id: string;
 }
 

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import interact from 'interactjs';
 import { AnyType } from '@/types';
+import { calcDegrees } from '@/utils';
 
 export type ChangeValue = {
 	x: number;
@@ -16,7 +17,10 @@ export type DragDomProps = {
 	moveEnd?(event: AnyType): void;
 	resizeStart?(event: AnyType): void;
 	resizeEnd?(event: AnyType): void;
+	rotateStart?(event: AnyType): void;
+	rotateEnd?(event: AnyType): void;
   onChange?(value: ChangeValue): void;
+	onRotateChange?(degrees: number): void;
 };
 export type DragDomReturnType = [{ isDragging: boolean }, (ref: HTMLElement) => void];
 
@@ -32,7 +36,12 @@ const getNumberFormStyle = (style: number | string = '') => {
 export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomReturnType => {
 	const [isDragging, setIsDragging] = useState(false);
 	const [node, setNode] = useState<HTMLDivElement>(null);
+	/** 坐标值，旋转时表示初始坐标值，在缩放拖拽时会随动作更改 */
 	const position = useRef({ x: 0, y: 0 });
+	/** 原点坐标，旋转时使用到 */
+	const originPoint = useRef({ x: 0, y: 0 });
+	/** 记录上一次的旋转值 */
+	const preRotate = useRef(0);
   
 	const drag = useCallback((ref) => ref && setNode(ref), []);
 
@@ -54,11 +63,8 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 				],
 				listeners: {
 					start(event) {
-						let { x, y } = event.target.dataset;
-						position.current = {
-							x: parseFloat(x) || 0,
-							y: parseFloat(y) || 0,
-						};
+						const { x, y } = event.target.dataset;
+						position.current = { x: parseFloat(x) || 0, y: parseFloat(y) || 0 };
 
 						props.moveStart?.(event);
 					},
@@ -86,11 +92,8 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 				enabled: props.selected,
 				listeners: {
 					start(event) {
-						let { x, y } = event.target.dataset;
-						position.current = {
-							x: parseFloat(x) || 0,
-							y: parseFloat(y) || 0,
-						};
+						const { x, y } = event.target.dataset;
+						position.current = { x: parseFloat(x) || 0, y: parseFloat(y) || 0 };
 
 						props.resizeStart?.(event);
 					},
@@ -121,27 +124,30 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 								endOnly: true
 							})
 						],
+						enabled: props.selected,
 						listeners: {
 							start(event) {
-								let { x, y } = event.target.dataset;
-								position.current = {
-									x: parseFloat(x) || 0,
-									y: parseFloat(y) || 0,
-								};
+								const { x, y } = event.page;
+								preRotate.current = parseFloat(node.dataset.rotate ?? '0');
+								/** 起始点 */
+								position.current = { x, y };
+								/** 原点 */
+								originPoint.current = { x: x - 100, y };
 
-							// props.moveStart?.(event);
+								props.rotateStart?.(event);
 							},
 							move(event) {
 								setIsDragging(true);
-								position.current.x += event.dx;
-								position.current.y += event.dy;
+								let degrees = Math.round(calcDegrees(position.current, event.page, originPoint.current));
 
-								console.log('position.current', position.current);
+								if (event.page.y < position.current.y) {
+									degrees = -degrees;
+								}
 
-							// props.onChange?.({ ...position.current, width: event.rect.width, height: event.rect.height });
+								props.onRotateChange?.(preRotate.current + degrees);
 							},
 							end(event) {
-							// props.moveEnd?.(event);
+								props.rotateEnd?.(event);
 							}
 						}
 					});

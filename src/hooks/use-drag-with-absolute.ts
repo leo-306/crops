@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { clamp, throttle } from 'lodash';
-import { useDragDom } from '@/hooks/use-drag-dom';
+import { DragDomProps, useDragDom, useStaticCallback } from '@/hooks';
 import { INIT_RECT } from '@/constants';
-import { getAbsoluteParent } from '@/utils/dom';
+import { getAbsoluteParent } from '@/utils';
 import { Coordinate, LocationLineInfo } from '@/types';
-import { useStaticCallback } from '@/hooks/use-static-callback';
 
 type Props = {
 	/** 是否显示辅助线 */
@@ -34,16 +33,17 @@ export const useDragWithAbsolute = (props: Props) => {
 		isEnd.current = true;
 		setLocationLineInfo(null);
 
-		const { x, y, width, height } = nodeRef.current.dataset;
+		const { x, y, width, height, rotate } = nodeRef.current.dataset;
 		onChange({
 			x: parseFloat(x),
 			y: parseFloat(y),
 			width: parseFloat(width),
 			height: parseFloat(height),
+			rotate: parseFloat(rotate),
 		});
 	}, []);
 
-	const dragParams = useMemo(() => {
+	const dragParams: DragDomProps = useMemo(() => {
 		return {
 			parentNode: parentRef.current,
 			rotatable: props.rotatable,
@@ -95,9 +95,20 @@ export const useDragWithAbsolute = (props: Props) => {
 						},
 					});
 				}
-			}, 40, { trailing: true }),
+			}, 30, { trailing: true }),
 			resizeStart: onStart,
 			resizeEnd: onEnd,
+			rotateStart: onStart,
+			rotateEnd: onEnd,
+			onRotateChange: degrees => {
+				nodeRef.current.style.transform = `rotateZ(${degrees}deg)`;
+				Object.assign(nodeRef.current.dataset, { rotate: degrees });
+
+				/** 节流会造成极端情况，onChange 在 end 事件之后执行，此时需要执行 end 事件 */
+				if (isEnd.current) {
+					onEnd();
+				}
+			},
 		};
 	}, [props.showLocationLine, props.rotatable, props.selected]);
 

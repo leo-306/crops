@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useMemo} from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { HotAreaProps } from '@/types';
 import { useDragWithAbsolute } from '@/hooks';
 

@@ -221,6 +221,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 		>
 			<img ref={imageRef} className={styles.img} src={src} alt="" draggable={false} crossOrigin="anonymous" />
 			{(showLocationLine && locationLineInfo) ? <LocationLine info={locationLineInfo} /> : null}
+
 			{[...coordinates, currentCoordinate].filter(Boolean).map((coordinate, index) => {
 				return (
 					<HotArea
