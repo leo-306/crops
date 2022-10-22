@@ -22,7 +22,10 @@
     "crops",
     "hot area",
     "hot zone",
-    "clip"
+    "clip",
+    "rotate",
+    "rotatable",
+    "image data"
   ],
   "files": [
     "dist",
