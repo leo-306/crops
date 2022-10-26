@@ -11,6 +11,7 @@ const App: FC = () => {
 			y: 200,
 			width: 231,
 			height: 113,
+			rotate: 30,
 			id: 'u_vFRE6',
 		}
 	]);

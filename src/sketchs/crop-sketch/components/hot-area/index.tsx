@@ -33,6 +33,7 @@ const HotArea: FC<HotAreaProps> = props => {
 			top: coordinate.y + 'px',
 			width: coordinate.width + 'px',
 			height: coordinate.height + 'px',
+			transform: `rotateZ(${coordinate.rotate}deg)`,
 		};
 	}, [coordinate]);
 
