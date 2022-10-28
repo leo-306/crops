@@ -24,15 +24,6 @@ export type DragDomProps = {
 };
 export type DragDomReturnType = [{ isDragging: boolean }, (ref: HTMLElement) => void];
 
-const getNumberFormStyle = (style: number | string = '') => {
-	try {
-		const number = parseFloat(String(style).replace('px', ''));
-
-		return Number.isNaN(number) ? 0 : number;
-	} catch {
-		return 0;
-	}
-};
 export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomReturnType => {
 	const [isDragging, setIsDragging] = useState(false);
 	const [node, setNode] = useState<HTMLDivElement>(null);
@@ -40,9 +31,7 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 	const position = useRef({ x: 0, y: 0 });
 	/** 原点坐标，旋转时使用到 */
 	const originPoint = useRef({ x: 0, y: 0 });
-	/** 记录上一次的旋转值 */
-	const preRotate = useRef(0);
-  
+
 	const drag = useCallback((ref) => ref && setNode(ref), []);
 
 	useEffect(() => {
@@ -51,7 +40,6 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 			return;
 		}
 
-		Object.assign(node.dataset, { x: getNumberFormStyle(node.style?.left), y: getNumberFormStyle(node.style?.top) });
 		interact(node)
 			.draggable({
 				origin: props.parentNode,
@@ -127,24 +115,17 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 						enabled: props.selected,
 						listeners: {
 							start(event) {
-								const { x, y } = event.page;
-								preRotate.current = parseFloat(node.dataset.rotate ?? '0');
-								/** 起始点 */
-								position.current = { x, y };
+								const rect = node.getBoundingClientRect();
 								/** 原点 */
-								originPoint.current = { x: x - 100, y };
+								originPoint.current = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 
 								props.rotateStart?.(event);
 							},
 							move(event) {
 								setIsDragging(true);
-								let degrees = Math.round(calcDegrees(position.current, event.page, originPoint.current));
+								const degrees = Math.round(calcDegrees(event.page, originPoint.current));
 
-								if (event.page.y < position.current.y) {
-									degrees = -degrees;
-								}
-
-								props.onRotateChange?.(preRotate.current + degrees);
+								props.onRotateChange?.(degrees);
 							},
 							end(event) {
 								props.rotateEnd?.(event);

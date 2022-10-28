@@ -1,21 +1,16 @@
 import { Point } from '@/types';
 
-/** 根据三点计算角度 */
-export const calcAngel = (p0: Point, p1: Point, origin: Point): number => {
-	const lengthP0Origin = Math.sqrt(Math.pow(origin.x - p0.x, 2) + Math.pow(origin.y - p0.y, 2));
-	const lengthP1Origin = Math.sqrt(Math.pow(origin.x - p1.x, 2) + Math.pow(origin.y - p1.y, 2));
-	const lengthP0P1 = Math.sqrt(Math.pow(p1.x - p0.x,2) + Math.pow(p1.y - p0.y,2));
-	return Math.acos(
-		(lengthP1Origin * lengthP1Origin + lengthP0Origin * lengthP0Origin - lengthP0P1 * lengthP0P1) /
-		(2 * lengthP1Origin * lengthP0Origin)
-	);
+/** 计算角度 */
+export const calcRadians = (point: Point, origin: Point): number => {
+	return Math.atan2(point.x - origin.x, point.y - origin.y);
 };
 
 /** 数学角度转换为浏览器识别的角度 */
-export const convertAngelToDegrees = (angle: number) => {
-	return 360 * angle / (2 * Math.PI);
+export const convertRadiansToDegrees = (radians: number) => {
+	/** 代表向左上滑动 radians 为负数，* -1 得到最终的偏移值 */
+	return (radians * (180 / Math.PI) * -1) + 180;
 };
 
-export const calcDegrees= (p0: Point, p1: Point, origin: Point): number => {
-	return convertAngelToDegrees(calcAngel(p0, p1, origin));
+export const calcDegrees= (point: Point, origin: Point): number => {
+	return convertRadiansToDegrees(calcRadians(point, origin));
 };

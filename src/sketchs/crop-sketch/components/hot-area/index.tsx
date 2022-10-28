@@ -37,12 +37,21 @@ const HotArea: FC<HotAreaProps> = props => {
 		};
 	}, [coordinate]);
 
+	const dataSet = useMemo(() => {
+		return {
+			'data-x': coordinate.x ?? 0,
+			'data-y': coordinate.y ?? 0,
+			'data-rotate': coordinate.rotate ?? 0,
+		};
+	}, [coordinate]);
+
 	const onClick = useCallback((event) => {
 		event.stopPropagation();
 		setSelectedId(coordinate.id);
 	}, []);
 	return (
 		<div
+			{...dataSet}
 			className={`${styles.areaContainer} ${selected ? styles.selected : ''}`}
 			ref={dragWithAbsolute}
 			style={style}
