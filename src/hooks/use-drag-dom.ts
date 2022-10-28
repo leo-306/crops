@@ -31,6 +31,8 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 	const position = useRef({ x: 0, y: 0 });
 	/** 原点坐标，旋转时使用到 */
 	const originPoint = useRef({ x: 0, y: 0 });
+	/** 判断是否处于旋转状态 */
+	const hasRotate = useRef(false);
 
 	const drag = useCallback((ref) => ref && setNode(ref), []);
 
@@ -51,8 +53,9 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 				],
 				listeners: {
 					start(event) {
-						const { x, y } = event.target.dataset;
+						const { x, y, rotate } = event.target.dataset;
 						position.current = { x: parseFloat(x) || 0, y: parseFloat(y) || 0 };
+						hasRotate.current = (rotate ?? 0) !== 0;
 
 						props.moveStart?.(event);
 					},
@@ -61,7 +64,11 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 						position.current.x += event.dx;
 						position.current.y += event.dy;
 
-						props.onChange?.({ ...position.current, width: event.rect.width, height: event.rect.height });
+						props.onChange?.({
+							...position.current,
+							width: hasRotate.current ? event.target.clientWidth : event.rect.width,
+							height: hasRotate.current ? event.target.clientHeight :event.rect.height,
+						});
 					},
 					end(event) {
 						props.moveEnd?.(event);
