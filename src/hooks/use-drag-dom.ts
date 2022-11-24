@@ -66,6 +66,7 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 
 						props.onChange?.({
 							...position.current,
+							/** 如果存在旋转，clientWidth 代表原始宽度，rect.width 代表旋转之后的最大矩形，即选择状态下一般 rect.width !== clientWidth */
 							width: hasRotate.current ? event.target.clientWidth : event.rect.width,
 							height: hasRotate.current ? event.target.clientHeight :event.rect.height,
 						});
@@ -87,16 +88,19 @@ export const useDragDom = (props: DragDomProps, deps: AnyType[] = []): DragDomRe
 				enabled: props.selected,
 				listeners: {
 					start(event) {
-						const { x, y } = event.target.dataset;
+						const { x, y, rotate } = event.target.dataset;
 						position.current = { x: parseFloat(x) || 0, y: parseFloat(y) || 0 };
+						hasRotate.current = (rotate ?? 0) !== 0;
 
 						props.resizeStart?.(event);
 					},
 					move(event) {
 						position.current.x += event.deltaRect.left;
 						position.current.y += event.deltaRect.top;
+						const originWidth = hasRotate.current ? event.target.clientWidth : event.rect.width;
+						const originHeight = hasRotate.current ? event.target.clientHeight : event.rect.height;
 
-						props.onChange?.({ ...position.current, width: event.rect.width, height: event.rect.height });
+						props.onChange?.({ ...position.current, width: originWidth + event.delta.x, height: originHeight + event.delta.y });
 					},
 					end(event) {
 						props.resizeEnd?.(event);

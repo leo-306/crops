@@ -1,11 +1,11 @@
 import React, { FC, useRef, useState } from 'react';
 import ReactDom from 'react-dom';
 import { identity } from 'lodash';
-import MultipleCorpSketch, { CorpCanvasSketch } from '../src';
-import { CorpData } from '../src/types';
+import MultipleCorpSketch from '../src';
+import { Coordinate, CorpData } from '../src/types';
 
 const App: FC = () => {
-	const [coordinates, setCoordinates] = useState([
+	const [coordinates, setCoordinates] = useState<Coordinate[]>([
 		{
 			x: 60,
 			y: 200,
@@ -16,7 +16,6 @@ const App: FC = () => {
 		}
 	]);
 	const ref = useRef({ getCropData: identity });
-	const canvasRef = useRef({ getCropData: identity });
 
 	const getCorpData = () => {
 		const cropData = ref.current.getCropData(coordinates);
@@ -50,17 +49,6 @@ const App: FC = () => {
 						) : null;
 					})}
 				</div>
-			</div>
-			<div style={{ flex: 1 }}>
-				{/*<CorpCanvasSketch*/}
-				{/*	coordinates={coordinates}*/}
-				{/*	width={300}*/}
-				{/*	src="https://img.zcool.cn/community/016dbe57b021070000012e7eedcf18.jpg@2o.jpg"*/}
-				{/*	onChange={(_, _index, coordinates) => {*/}
-				{/*		setCoordinates(coordinates);*/}
-				{/*	}}*/}
-				{/*	ref={canvasRef}*/}
-				{/*/>*/}
 			</div>
 		</div>
 	);

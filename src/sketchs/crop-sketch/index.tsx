@@ -47,6 +47,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 	const imageRef = useRef<HTMLImageElement>(null);
 	const sketchStyle = useMemo(() => ({ width, height }), [width, height]);
 
+	/** 创建热区时计算热区位置 */
 	const getCoordinatePosition = useCallback((event: MouseEvent) => {
 		const rect = containerRef.current.getBoundingClientRect();
 		let { x: pointX, y: pointY } = getCursorPointer(event);
@@ -74,6 +75,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 		};
 	}, [coordinateConfig]);
 
+	/** 初始化拖拽时使用的热区数据 */
 	const resetCoordinate = useCallback(() => {
 		startPoint.current = null;
 		currentId.current = '';
@@ -100,6 +102,7 @@ const MultipleCorpSketch: ForwardRefRenderFunction<CorpSketchRef, CorpSketchProp
 			setSelectedId(currentId.current);
 			setCurrentCoordinate(coordinate);
 
+			/** 定位线 */
 			showLocationLine && setLocationLineInfo({
 				offset: {
 					leftTopHorizontal: coordinate.x,
