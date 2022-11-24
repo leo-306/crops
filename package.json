@@ -32,16 +32,14 @@
     "README.md"
   ],
   "peerDependencies": {
-    "lodash": "^4.17.21",
-    "nanoid": "^4.0.0",
+    "interactjs": "^1.10.17",
     "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "interactjs": "^1.10.17"
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
-    "@types/lodash": "^4.14.184",
+    "@types/lodash-es": "^4.17.6",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
@@ -73,5 +71,9 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nanoid": "^4.0.0",
+    "lodash-es": "^4.17.21"
+  }
 }

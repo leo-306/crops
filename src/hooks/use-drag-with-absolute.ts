@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
-import { clamp, throttle } from 'lodash';
+import { clamp, throttle } from 'lodash-es';
 import { DragDomProps, useDragDom, useStaticCallback } from '@/hooks';
 import { INIT_RECT } from '@/constants';
 import { getAbsoluteParent } from '@/utils';

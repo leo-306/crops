@@ -10,7 +10,7 @@ import React, {
 	useRef,
 	useState
 } from 'react';
-import { clamp, isNumber, throttle } from 'lodash';
+import { clamp, isNumber, throttle } from 'lodash-es';
 import { Coordinate, CorpData, CorpSketchProps, CorpSketchRef, LocationLineInfo, Point } from '@/types';
 import { createCanvas, generateID, getCursorPointer } from '@/utils';
 import { BASE_COORDINATE_CONFIG } from '@/constants';

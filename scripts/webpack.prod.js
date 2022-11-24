@@ -12,17 +12,8 @@ module.exports = merge(common, {
   },
   externals: [
     {
-      lodash: {
-        commonjs: "lodash",
-        commonjs2: "lodash",
-        amd: "lodash",
-        root: "_",
-      },
       "react": "react",
       "react-dom": "react-dom",
-      "classnames": "classnames",
-      "nanoid": "nanoid",
-      "dayjs": "dayjs",
       "interactjs": "interactjs"
     },
   ],
