@@ -9,7 +9,7 @@ const App: FC = () => {
 		{
 			x: 60,
 			y: 200,
-			width: 231,
+			width: 210,
 			height: 113,
 			rotate: 30,
 			id: 'u_vFRE6',
@@ -30,7 +30,7 @@ const App: FC = () => {
 					width={300}
 					limit={2}
 					rotatable
-					src="https://img.zcool.cn/community/016dbe57b021070000012e7eedcf18.jpg@2o.jpg"
+					src="http://pic.616pic.com/bg_w1180/00/24/12/2RxmGbjECV.jpg"
 					onChange={(_, _index, coordinates) => {
 						setCoordinates(coordinates);
 					}}
